@@ -77,38 +77,48 @@ def random_sample(dataset, array_size):
     sampled_data = dataset[indices]
     return sampled_data
 
-def sample_pulsars(normalized_dataset, train_size, test_size, num_test_sets=5):
+def sample_pulsars(normalized_dataset, train_size, test_size, num_sets):
     # Separate pulsars and non-pulsars from the dataset
     pulsars = normalized_dataset[normalized_dataset[:, -1] == 1]
     non_pulsars = normalized_dataset[normalized_dataset[:, -1] == 0]
     pulsar_size = int(train_size * 0.5)
     non_pulsar_size = int(train_size * 0.5)
+    pulsar_size_test = int(test_size * 0.5)
+    non_pulsar_size_test = int(test_size * 0.5)
 
-    # Randomly sample pulsars, non-pulsars, and the test set
-    pulsar_samples = random_sample(pulsars, pulsar_size)
-    non_pulsar_samples = random_sample(non_pulsars, non_pulsar_size)
 
     # Initialize empty lists for test samples
     test_pulsar_samples = []
     test_non_pulsar_samples = []
-
+    train_pulsar_samples = []
+    train_non_pulsar_samples = []
+    
     # Loop to create multiple test sets
-    for i in range(num_test_sets):
-        pulsar_size_test = int(test_size * 0.5)
-        non_pulsar_size_test = int(test_size * 0.5)
+    for i in range(num_sets):
 
+        # Randomly sample pulsars, non-pulsars, and the test set
+        pulsar_samples = random_sample(pulsars, pulsar_size)
+        non_pulsar_samples = random_sample(non_pulsars, non_pulsar_size)
+        
         test_pulsar_set = random_sample(pulsars, pulsar_size_test)
         test_non_pulsar_set = random_sample(non_pulsars, non_pulsar_size_test)
 
         # Append to the overall test sets
         test_pulsar_samples.append(test_pulsar_set)
         test_non_pulsar_samples.append(test_non_pulsar_set)
+        
+        train_pulsar_samples.append(pulsar_samples)
+        train_non_pulsar_samples.append(non_pulsar_samples)
+
 
     # Convert lists to numpy arrays
     test_pulsar_samples = np.array(test_pulsar_samples)
     test_non_pulsar_samples = np.array(test_non_pulsar_samples)
+    
+    train_pulsar_samples = np.array(train_pulsar_samples)
+    train_non_pulsar_samples = np.array(train_non_pulsar_samples)
 
-    return pulsar_samples, non_pulsar_samples, test_pulsar_samples, test_non_pulsar_samples
+    return train_pulsar_samples, train_non_pulsar_samples, test_pulsar_samples, test_non_pulsar_samples
 
 
 
