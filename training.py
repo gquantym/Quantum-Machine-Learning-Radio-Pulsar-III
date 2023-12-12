@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pennylane as qml
 from pennylane import numpy as np
+import time
 
 def pulsar_probability(sampled_data, weights, quantum_circuit):
     global expectation_value
@@ -39,7 +40,7 @@ def square_loss(weights, data,quantum_circuit):
 #Optimization using built-in PennyLane optimizer (Adam). stepsize=0.1: This parameter sets the learning rate for the Adam optimizer. The learning rate controls the step size during optimization and affects how quickly the model's parameters are updated
 import time 
 
-def training(epochs, initial_weights, sampled_train_data, loss_func_choice,quantum_circuit): #loss_func_choice 0 if we want square loss 1 if we want 
+def training(epochs, initial_weights, sampled_train_data, loss_func_choice,quantum_circuit,set_number): #loss_func_choice 0 if we want square loss 1 if we want 
     optimizer = qml.AdamOptimizer(stepsize=0.1)
     loss_array = np.array([])
     q = 0
@@ -48,19 +49,16 @@ def training(epochs, initial_weights, sampled_train_data, loss_func_choice,quant
         loss_function = square_loss
     else:
         loss_function = cross_entropy_loss
+    
+    start_time = time.perf_counter()
     for epoch in range(epochs):
-        start_time = time.perf_counter()
         optimized_weights, loss= optimizer.step_and_cost(lambda w: loss_function(w, sampled_train_data, quantum_circuit), initial_weights)
         initial_weights = optimized_weights
         loss_array = np.append(loss_array, loss)
-        if q == 0:
-            print("Epoch == ")
-            end_time = time.perf_counter()
-            elapsed_time = end_time - start_time
-            print("Elapsed time: ", elapsed_time)
-            q=1
-
         if (epoch+1) % 10 == 0:
             print(f"Epoch {epoch + 1}, Loss: {loss:.8f}")
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    print("Elapsed time (Set Number = {0}): {1}".format(set_number, elapsed_time))
     return optimized_weights,loss_array
 
