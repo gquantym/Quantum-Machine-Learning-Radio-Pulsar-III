@@ -11,10 +11,10 @@ def optimized_probabilities(opt_prob_non_pulsar,opt_prob_pulsar,epoch,loss_func_
     plt.title("After Optimization - {0} - Epoch {1} - Dataset Label {2}".format(titles[loss_func_choice],epoch,set_num))
     plt.xlabel("Samples")
     plt.ylabel("Probability")
-    plt.legend(bbox_to_anchor=(1.3, 0.5))
-    plt.axhline(y=threshold_spec, color='g', linestyle='--', label='Horizontal Line at probability = {:.1f}'.format(threshold_spec))
-    plt.axhline(y=threshold_acc, color='orange', linestyle='--', label='Horizontal Line at probability = {:.1f}'.format(threshold_acc))
+    plt.axhline(y=threshold_spec, color='g', linestyle='--', label='Mean specificity threshold = {:.1f}'.format(threshold_spec))
+    plt.axhline(y=threshold_acc, color='orange', linestyle='--', label='Mean accuracy threshold = {:.1f}'.format(threshold_acc))
     plt.ylim(0, 1)
+    plt.legend(bbox_to_anchor=(1.2, 0.6))
     plt.show()
 
 def loss_function(epoch,loss_array,loss_func_choice,set_num):
@@ -44,7 +44,7 @@ def probabilities(probability_pulsar,probability_non_pulsar,set_num):
     plt.show()
     
 
-def test_probabilities(pulsar_probability,non_pulsar_probability,epoch,loss_func_choice,threshold,sensitivity,specificity,set_num):
+def test_probabilities(pulsar_probability,non_pulsar_probability,epoch,loss_func_choice,spec_threshold,acc_threshold,set_num,title):
     #import testing
     # Create a boolean mask for class 0 and class 1
     linspace_pulsar = np.linspace(0, len(pulsar_probability), len(pulsar_probability),dtype = int)/len(pulsar_probability) #Linspace of samplesize 
@@ -56,9 +56,10 @@ def test_probabilities(pulsar_probability,non_pulsar_probability,epoch,loss_func
     #print("Sensitivity = {}%".format(sensitivity*100))
     #print("Specificity = {}%".format(specificity*100))
     
-    plt.axhline(y=threshold, color='g', linestyle='--', label='Horizontal Line at probability = {:.1f}\nSensitivity = {:.1f}%\nSpecificity = {:.1f}%'.format(threshold,sensitivity*100,specificity*100))
-    titles = ["Square Loss","Cross Entropy Loss"]
-    plt.title("Test data using weights from {0} - Epoch {1} - Dataset Label {2}".format(titles[loss_func_choice],epoch,set_num))
+    plt.axhline(y=spec_threshold, color='g', linestyle='--', label='Specificity threshold = {:.1f}\n'.format(spec_threshold))
+    plt.axhline(y=acc_threshold, color='orange', linestyle='--', label='Accuracy threshold = {:.1f}'.format(acc_threshold))
+
+    plt.title("{0} Test Data Epoch {1} - Dataset Label {2}".format(title,epoch,set_num))
     plt.xlabel("Samples")
     plt.ylabel("Probability")
     plt.legend(bbox_to_anchor=(1, 0.5))
