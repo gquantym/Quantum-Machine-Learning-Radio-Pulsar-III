@@ -70,14 +70,14 @@ def calculate_specificity_sensitivity(true_labels, predicted_probabilities, thre
     total_actual_positives = true_positives + false_negatives
     sensitivity = true_positives / total_actual_positives
     
-    
+    '''
     print("true_negatives == ", true_negatives)
     print("true_positives == ", true_positives)
     print("total_actual_negatives == ", total_actual_negatives)
     print("total_actual_positives == ", total_actual_positives)
     print("len(true_labels) == ",len(true_labels))
     
-    print("--------------------------------")
+    print("--------------------------------")'''
     acc = accurary(true_positives,true_negatives, len(true_labels))
     
     
